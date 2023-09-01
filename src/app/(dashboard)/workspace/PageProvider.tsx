@@ -1,11 +1,16 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
+import {  ImageIcon, Loader2Icon, LoaderIcon, TextIcon, VideoIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import ImageProvider from "@/components/ImageProvider";
-import { handleVideoFetch } from "./function";
+import { handleUploadFile, handleVideoFetch } from "./function";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import DialogContentProvider from "@/components/DialogContentProvider";
+import { cn } from "@/lib/utils";
 
 const PageProvider = ({
   title,
@@ -18,6 +23,9 @@ const PageProvider = ({
   imgUrl?: string;
   id?: string;
 }) => {
+  const[isVidUpdateLoading, setIsVidUpdateLoading] = useState(false);
+  const[isVidStreamLoading, setIsVidStreamLoading] = useState(false);
+
   const[videoSrc, setVideoSrc] = useState("");
 
   if (!description) description = "";
@@ -37,17 +45,19 @@ const PageProvider = ({
               <Label
                 className=" h-fit text-xs text-muted-foreground pl-1"
                 htmlFor="Video"
-              >
-                Video
+              ><span className=" flex items-center gap-x-1">
+                <VideoIcon className="h-5 w-5 text-muted-foreground" />
+                Video</span>
               </Label>
               <div className=" flex w-fit items-center h-fit">
                 <Button
                   className=" border-r rounded-none rounded-l-md text-xs md:text-sm p-2 h-8 md:p-3 md:h-9"
                   variant={"outline"}
                   size={"sm"}
-                  onClick={() => handleVideoFetch(setVideoSrc, id)}
+                  onClick={() => handleVideoFetch(setVideoSrc, setIsVidStreamLoading, id)}
                 >
-                  Stream
+                  { isVidStreamLoading && <Loader2Icon className=" absolute animate-spin" />}
+                  <span className={cn(isVidStreamLoading ? " text-foreground/30": "" )}>Stream</span>
                 </Button>
                 <Button
                   className=" border-r rounded-none text-xs md:text-sm p-2 h-8 md:p-3 md:h-9"
@@ -56,13 +66,21 @@ const PageProvider = ({
                 >
                   Download
                 </Button>
-                <Button
-                  className=" rounded-none rounded-r-md text-xs md:text-sm p-2 h-8 md:p-3 md:h-9"
-                  variant={"outline"}
-                  size={"sm"}
-                >
-                  Update
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      className={cn("rounded-none rounded-r-md text-xs md:text-sm p-2 h-8 md:p-3 md:h-9")}
+                      variant={"outline"}
+                      size={"sm"}
+                      disabled={isVidUpdateLoading? true: false}
+                    >
+                      { isVidUpdateLoading && <Loader2Icon className=" absolute animate-spin" />}
+                      <span className={cn(isVidUpdateLoading ? " text-foreground/30": "" )}>Update</span>
+                    </Button>
+                    </DialogTrigger>
+                    <DialogContentProvider setLoader={setIsVidUpdateLoading} id={id} fileFormat="Video" uploadFile={handleUploadFile}/>
+
+                </Dialog>
               </div>
             </div>
             <Button className=" mt-4 text-sm md:text-base" variant={"destructive"}>
@@ -74,11 +92,15 @@ const PageProvider = ({
 
       <div className=" gap-4 md:flex ">
 
-
         <div className=" w-full mt-10 grid-cols-1 grid md:grid-cols-1 gap-6 px-10 lg:px-20 md:px-8 xl:px-28 md:w-7/12">
           <div className=" flex justify-center md:col-span-1">
             <div className=" grid grid-cols-1 gap-2 w-full h-fit">
-              <Label htmlFor="Title">Title</Label>
+              <Label htmlFor="Title">
+                <span className="flex items-center gap-x-1">
+                  <TextIcon className="h-5 w-5 text-muted-foreground" />
+                  Title
+                </span>
+              </Label>
               <Textarea
                 wrap="off"
                 rows={1}
@@ -91,7 +113,12 @@ const PageProvider = ({
           </div>
           <div className=" flex justify-center md:col-span-1">
             <div className=" grid grid-cols-1 gap-2 w-full h-fit">
-              <Label htmlFor="Description">Description</Label>
+              <Label htmlFor="Description">
+              <span className="flex items-center gap-x-1">
+                <TextIcon className="h-5 w-5 text-muted-foreground" />
+                Description
+              </span>
+              </Label>
               <Textarea
                 onChange={handleDesc}
                 value={desc}
@@ -104,14 +131,17 @@ const PageProvider = ({
             </div>
           </div>
         </div>
-        <div className=" w-full mt-10 gap-6 px-10 md:px-8 lg:px-20 xl:px-28 md:w-5/12">
-        <Label htmlFor="Thumbnail">Thumbnail</Label>
-            <ImageProvider src={imgUrl}/>
+        <div className=" space-y-1.5 w-full mt-10 px-10 md:px-8 lg:px-20 xl:px-28 md:w-5/12">
+          <Label htmlFor="Thumbnail">
+            <span className="flex items-center gap-x-1">
+              <ImageIcon className="h-5 w-5 text-muted-foreground" />
+            Thumbnail
+            </span>
+          </Label>
+            <ImageProvider id={id} handleUploadFile={handleUploadFile} src={imgUrl}/>
         </div>
 
-
       </div>
-
     </div>
   );
 };

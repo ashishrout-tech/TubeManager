@@ -2,8 +2,6 @@ import PageProvider from "./PageProvider";
 
 const Page = async ({params, searchParams}: {params: null, searchParams: {id: string}}) => {
 
-  console.log(searchParams.id)
-
 
   // const response = await fetch("/api/title-desc", {cache: "no-cache"})
   // const data = await response.json();
