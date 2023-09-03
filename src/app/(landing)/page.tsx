@@ -1,3 +1,4 @@
+import LandingFooterClient from "./LandingFooterClient";
 
 export default function Home() {
   
@@ -5,5 +6,6 @@ export default function Home() {
     <div>
       LANDING PAGE
     </div>
+    <LandingFooterClient />
   </div>;
 }

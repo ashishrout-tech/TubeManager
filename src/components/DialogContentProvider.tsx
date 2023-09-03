@@ -51,7 +51,7 @@ const DialogContentProvider = ({
     setLoader(true);
     await uploadFile(file, fileType, fileKey, fileFormat, id);
     setFile(null);
-    setLoader(false);
+    if(fileFormat === "Video") setLoader(false);
     // TODO
     router.refresh();
   };

@@ -7,18 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import ImageProvider from "@/components/ImageProvider";
-import { handleUploadFile, handleVideoFetch } from "./function";
+import {handleUploadFile, handleVideoFetch, titleDesc} from "./function";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import DialogContentProvider from "@/components/DialogContentProvider";
 import { cn } from "@/lib/utils";
 
 const PageProvider = ({
-  title,
+  preTitle,
   description,
   imgUrl,
   id
 }: {
-  title?: string;
+  preTitle?: string;
   description?: string;
   imgUrl?: string;
   id?: string;
@@ -26,14 +26,19 @@ const PageProvider = ({
   const[isVidUpdateLoading, setIsVidUpdateLoading] = useState(false);
   const[isVidStreamLoading, setIsVidStreamLoading] = useState(false);
 
+  const[isTitleLoading, setIsTitleLoading] = useState(false);
+  const[isDescriptionLoading, setIsDescriptionLoading] = useState(false);
+
   const[videoSrc, setVideoSrc] = useState("");
 
   if (!description) description = "";
   const [desc, setDesc] = useState(description);
   const descRows = Math.min(15, desc.split("\n").length);
-  function handleDesc(e: ChangeEvent<HTMLTextAreaElement>) {
-    setDesc(e.target.value);
-  }
+
+
+  const [title, setTitle] = useState(preTitle);
+
+
 
   return (
     <div className=" mt-12 mb-6">
@@ -72,7 +77,7 @@ const PageProvider = ({
                       className={cn("rounded-none rounded-r-md text-xs md:text-sm p-2 h-8 md:p-3 md:h-9")}
                       variant={"outline"}
                       size={"sm"}
-                      disabled={isVidUpdateLoading? true: false}
+                      disabled={isVidUpdateLoading}
                     >
                       { isVidUpdateLoading && <Loader2Icon className=" absolute animate-spin" />}
                       <span className={cn(isVidUpdateLoading ? " text-foreground/30": "" )}>Update</span>
@@ -107,8 +112,15 @@ const PageProvider = ({
                 disabled={false}
                 placeholder="Type video title here."
                 value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
-              <Button disabled={false}>Update Title</Button>
+              <Button
+                  disabled={false}
+                  onClick={() => titleDesc(title, "title", setIsTitleLoading, id!)}
+              >
+                { isTitleLoading && <Loader2Icon className=" absolute animate-spin" />}
+                <span className={cn(isTitleLoading ? " text-foreground/30": "" )}>Update Title</span>
+              </Button>
             </div>
           </div>
           <div className=" flex justify-center md:col-span-1">
@@ -120,14 +132,20 @@ const PageProvider = ({
               </span>
               </Label>
               <Textarea
-                onChange={handleDesc}
+                onChange={(e) => setDesc(e.target.value)}
                 value={desc}
                 wrap="off"
                 rows={Math.max(descRows, 7)}
                 disabled={false}
                 placeholder="Type video description here."
               />
-              <Button disabled={false}>Update Description</Button>
+              <Button
+                  disabled={false}
+                  onClick={() => titleDesc(desc, "description", setIsDescriptionLoading, id!)}
+              >
+                { isDescriptionLoading && <Loader2Icon className=" absolute animate-spin" />}
+                <span className={cn(isDescriptionLoading ? " text-foreground/30": "" )}>Update Description</span>
+              </Button>
             </div>
           </div>
         </div>

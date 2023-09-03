@@ -9,3 +9,34 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id               String      @id @default(uuid())
+  email            String      @unique
+  name             String?
+  adminWorkspaces  Workspace[] @relation("adminWorkspace")
+  editorWorkspaces Workspace[] @relation("editorWorkspace")
+
+  @@index([email])
+}
+
+model Workspace {
+  id              String        @id @default(uuid())
+  workspaceData   WorkspaceData @relation(fields: [workspaceDataId], references: [id])
+  workspaceDataId String        @unique
+  admin           User          @relation("adminWorkspace", fields: [adminEmail], references: [email])
+  adminEmail      String
+  editor          User[]        @relation("editorWorkspace")
+  isDeployed      Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model WorkspaceData {
+  id            String     @id @default(uuid())
+  title         String?    @default("")
+  description   String?    @default("")
+  videoPath     String?    @default("")
+  thumbnailPath String?    @default("")
+  workspace     Workspace?
+}

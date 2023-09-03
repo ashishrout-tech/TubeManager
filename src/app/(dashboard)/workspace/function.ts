@@ -83,5 +83,27 @@ export async function handleUploadFile(file: File | null, fileType: string, file
     console.log(error);
   }
 
+}
 
+export async function titleDesc(text: string | undefined, type: "title" | "description", setLoader:  Dispatch<SetStateAction<boolean>>, id: string){
+  if(!text) text = "";
+  try {
+    setLoader(true);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/titleDesc?id=${id}`, {
+      method: "POST",
+      body: JSON.stringify({
+        text: text,
+        type: type
+      }),
+      cache: "no-store"
+    })
+    if(!response.ok) throw new Error((await response.json()).error)
+
+  } catch (err) {
+    // TODO
+    console.log((err as Error).message);
+  }
+  finally {
+    setLoader(false);
+  }
 }

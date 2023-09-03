@@ -36,7 +36,7 @@ const ImageProvider = ({
     <>
       <Card>
         <CardContent>
-          <div className=" mt-6 max-w-2xl m-auto">
+          <div className=" mt-6 max-w-2xl max-h-80 m-auto">
             {src && (
               <Image
                 className=" w-full h-full rounded-md"
@@ -44,6 +44,7 @@ const ImageProvider = ({
                 width={1000}
                 src={src}
                 alt="thumbnail"
+                onLoadingComplete={() => setIsImgUpdateLoading(false)}
               />
             )}
           </div>
