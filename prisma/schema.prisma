@@ -22,6 +22,7 @@ model User {
 
 model Workspace {
   id              String        @id @default(uuid())
+  name            String
   workspaceData   WorkspaceData @relation(fields: [workspaceDataId], references: [id])
   workspaceDataId String        @unique
   admin           User          @relation("adminWorkspace", fields: [adminEmail], references: [email])
@@ -30,6 +31,8 @@ model Workspace {
   isDeployed      Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+
+  @@unique([adminEmail, name])
 }
 
 model WorkspaceData {

@@ -1,33 +1,39 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { useRouter } from 'next/navigation';
+import {oauth2_v2} from "googleapis";
+import {Dialog, DialogTrigger} from "@/components/ui/dialog";
+import CreateDialogContentProvider from "@/components/landing/CreateDialogContentProvider";
+import JoinDialogContentProvider from "@/components/landing/JoinDialogContentProvider";
 
-const LandingFooterClient = () => {
-    const router = useRouter();
+const LandingFooterClient = ({
+    userInfo
+}: {
+    userInfo:  oauth2_v2.Schema$Userinfo | null
+}) => {
 
-    async function createWorkspace() {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/workspace`, {
-                cache: "no-store"
-            })
-            const data = await response.json()
-            if(!response.ok) throw new Error((await response.json()).error)
-            router.push(data.url)
-        } catch (error: any) {
-            // TODO
-            console.log(error.message)
-        }
-    }
 
     return(
         <div className=" flex justify-between">
-            <Button onClick={() => {}}> 
-                Join 
-            </Button>
-            <Button onClick={createWorkspace}> 
-                Create 
-            </Button>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button>
+                        Join
+                    </Button>
+                </DialogTrigger>
+                <JoinDialogContentProvider userInfo={userInfo} />
+
+            </Dialog>
+
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button>
+                        Create
+                    </Button>
+                </DialogTrigger>
+                <CreateDialogContentProvider userInfo={userInfo} />
+
+            </Dialog>
         </div>
     )
 }

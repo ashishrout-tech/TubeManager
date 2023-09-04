@@ -16,21 +16,20 @@ export async function GET() {
         const user = await profile.userinfo.get({
             auth: oauth2Client,
         });
-        
-        const checkUser = await prismadb.user.findUnique({
+
+        await prismadb.user.upsert({
             where: {
                 email: user.data.email!
+            },
+            update:{
+                name: user.data.name
+            },
+            create: {
+                email: user.data.email!,
+                name: user.data.name
             }
         })
 
-        if(!checkUser){
-            await prismadb.user.create({
-                data: {
-                email: user.data.email!,
-                name: user.data.name,
-                }
-            })
-        }
         console.log("user created:", user.data);
         return NextResponse.json({userData: user.data}, {status: 201})
 
