@@ -41,7 +41,7 @@ const Page = async ({ params, searchParams }: { params: null, searchParams: { id
 
 
 
-   return <div className=" h-screen w-screen flex items-center justify-center">
+   return <div className="h-[65vh] w-full flex items-center justify-center">
       <div className=" w-fit h-4/6 mt-32 md:mt-12 flex flex-col">
          <span className=" text-2xl">Editors</span>
          <p className=" text-muted-foreground text-sm">users who have editing access of this workspace</p>

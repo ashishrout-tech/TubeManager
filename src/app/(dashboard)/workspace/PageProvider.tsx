@@ -1,35 +1,54 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
-import {  ImageIcon, Loader2Icon, LoaderIcon, TextIcon, VideoIcon } from "lucide-react";
+import { useState } from "react";
+import {  ImageIcon, Loader2Icon, TextIcon, VideoIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import ImageProvider from "@/components/ImageProvider";
-import {handleUploadFile, handleVideoFetch, titleDesc} from "./function";
+import {handleUploadFile, handleVideoFetch, onDeploy, titleDesc} from "./function";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import DialogContentProvider from "@/components/DialogContentProvider";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import {useToast} from "@/components/ui/use-toast";
+import {useRouter} from "next/navigation";
 
 const PageProvider = ({
   preTitle,
   description,
   imgUrl,
-  id
+  id,
+  isDeployed
 }: {
   preTitle?: string;
   description?: string;
   imgUrl?: string;
   id?: string;
+  isDeployed?: boolean;
 }) => {
+  const {toast} = useToast();
+
   const[isVidUpdateLoading, setIsVidUpdateLoading] = useState(false);
   const[isVidStreamLoading, setIsVidStreamLoading] = useState(false);
+  const[isDeployLoading, setIsDeployLoading] = useState(false);
 
   const[isTitleLoading, setIsTitleLoading] = useState(false);
   const[isDescriptionLoading, setIsDescriptionLoading] = useState(false);
 
   const[videoSrc, setVideoSrc] = useState("");
+  const[status, setStatus] = useState<"public"|"private"|"unlisted"|null>(null);
+
+  const router = useRouter();
 
   if (!description) description = "";
   const [desc, setDesc] = useState(description);
@@ -38,12 +57,10 @@ const PageProvider = ({
 
   const [title, setTitle] = useState(preTitle);
 
-
-
   return (
-    <div className=" mt-12 mb-6">
-      <div className=" pt-10 sm:pt-4 w-full flex justify-center">
-        <div className=" w-11/12 max-w-4xl">
+    <div className=" mt-4 mb-6">
+      <div className=" pt-5 sm:pt-4 w-full flex justify-center">
+        <div className=" w-11/12 max-w-4xl flex flex-col">
           <video src={videoSrc} controls className=" w-full rounded-md" />
           <div className=" flex justify-between mt-6 px-2 mb-3">
             <div className=" flex flex-col gap-1">
@@ -59,7 +76,7 @@ const PageProvider = ({
                   className=" border-r rounded-none rounded-l-md text-xs md:text-sm p-2 h-8 md:p-3 md:h-9"
                   variant={"outline"}
                   size={"sm"}
-                  onClick={() => handleVideoFetch(setVideoSrc, setIsVidStreamLoading, id)}
+                  onClick={() => handleVideoFetch(setVideoSrc, setIsVidStreamLoading, id, toast)}
                 >
                   { isVidStreamLoading && <Loader2Icon className=" absolute animate-spin" />}
                   <span className={cn(isVidStreamLoading ? " text-foreground/30": "" )}>Stream</span>
@@ -84,20 +101,40 @@ const PageProvider = ({
                     </Button>
                     </DialogTrigger>
                     <DialogContentProvider setLoader={setIsVidUpdateLoading} id={id} fileFormat="Video" uploadFile={handleUploadFile}/>
-
                 </Dialog>
               </div>
             </div>
-            <Button className=" mt-4 text-sm md:text-base" variant={"destructive"}>
-              DEPLOY
-            </Button>
+            {!isDeployed && <Button className=" mt-4 text-sm md:text-base"
+                    variant={"destructive"}
+                    onClick={() => onDeploy(id, status, toast, setIsDeployLoading, router)}
+                    disabled={isDeployLoading}
+            >
+              { isDeployLoading && <Loader2Icon className=" absolute animate-spin" />}
+              <span className={cn(isDeployLoading ? " text-foreground/30": "" )}>DEPLOY</span>
+            </Button>}
+          </div>
+          <div className="w-full flex flex-col gap-1 px-2">
+            <Label className="text-xs text-muted-foreground">Select status of your video</Label>
+            <Select onValueChange={(value: "public" | "private" | "unlisted") => (setStatus(value))}>
+              <SelectTrigger className="w-32 h-8">
+                <SelectValue className="text-xs" placeholder="Select here" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Status</SelectLabel>
+                  <SelectItem className="text-sm" value="public">Public</SelectItem>
+                  <SelectItem className="text-sm" value="private">Private</SelectItem>
+                  <SelectItem className="text-sm" value="unlisted">Unlisted</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
 
       <div className=" gap-4 md:flex ">
 
-        <div className=" w-full mt-10 grid-cols-1 grid md:grid-cols-1 gap-6 px-10 lg:px-20 md:px-8 xl:px-28 md:w-7/12">
+        <div className=" w-full mt-12 grid-cols-1 grid md:grid-cols-1 gap-6 px-10 lg:px-20 md:px-8 xl:px-28 md:w-7/12">
           <div className=" flex justify-center md:col-span-1">
             <div className=" grid grid-cols-1 gap-2 w-full h-fit">
               <Label htmlFor="Title">
@@ -109,14 +146,14 @@ const PageProvider = ({
               <Textarea
                 wrap="off"
                 rows={1}
-                disabled={false}
+                disabled={isTitleLoading}
                 placeholder="Type video title here."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
               <Button
-                  disabled={false}
-                  onClick={() => titleDesc(title, "title", setIsTitleLoading, id!)}
+                  disabled={isTitleLoading}
+                  onClick={() => {titleDesc(title, "title", setIsTitleLoading, id!, toast)}}
               >
                 { isTitleLoading && <Loader2Icon className=" absolute animate-spin" />}
                 <span className={cn(isTitleLoading ? " text-foreground/30": "" )}>Update Title</span>
@@ -136,12 +173,12 @@ const PageProvider = ({
                 value={desc}
                 wrap="off"
                 rows={Math.max(descRows, 7)}
-                disabled={false}
+                disabled={isDescriptionLoading}
                 placeholder="Type video description here."
               />
               <Button
-                  disabled={false}
-                  onClick={() => titleDesc(desc, "description", setIsDescriptionLoading, id!)}
+                  disabled={isDescriptionLoading}
+                  onClick={() => titleDesc(desc, "description", setIsDescriptionLoading, id!, toast)}
               >
                 { isDescriptionLoading && <Loader2Icon className=" absolute animate-spin" />}
                 <span className={cn(isDescriptionLoading ? " text-foreground/30": "" )}>Update Description</span>

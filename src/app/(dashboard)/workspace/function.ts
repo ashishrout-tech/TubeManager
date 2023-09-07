@@ -1,11 +1,13 @@
 "use client";
 
 import { Dispatch, SetStateAction } from "react";
+import {AppRouterInstance} from "next/dist/shared/lib/app-router-context";
 
 export async function handleVideoFetch(
   setVideoSrc: Dispatch<SetStateAction<string>>,
   setIsVidStreamLoading: Dispatch<SetStateAction<boolean>>,
   id?: string,
+  toast?: any
 ) {
   try {
     setIsVidStreamLoading(true);
@@ -16,39 +18,36 @@ export async function handleVideoFetch(
     );
     const vidData = await vidResponse.json();
     console.log(vidData);
+    toast({
+      description: "Successfully Fetched",
+    })
     setVideoSrc(vidData.url);
   } catch (error) {
-    // TODO
+    toast({
+      title: "ERROR",
+      description: "Video Fetching Error",
+      variant: "destructive"
+    })
     console.log((error as Error).message);
   } finally{
     setIsVidStreamLoading(false);
   }
 }
 
-export async function handleUploadFile(file: File | null, fileType: string, fileKey: string, fileFormat: string, id?: string) {
-  if(!file) {
-    // TODO
-    console.log("File required");
-    return;
-  }
-  console.dir(file);
-  console.log("fileType", fileType)
-  console.log("fileKey", fileKey)
-  console.log("fileFormat", fileFormat)
-
-  if(fileFormat === "Video" && fileType.slice(0, 5) !== "video"){
-    // TODO
-    console.log("Wrong File Type Received");
-    return;
-  }
-
-  if(fileFormat === "Thumbnail" && fileType.slice(0, 5) !== "image"){
-    // TODO
-    console.log("Wrong File Type Received");
-    return;
-  }
-
+export async function handleUploadFile(file: File | null, fileType: string, fileKey: string, fileFormat: string, id?: string, toast?: any) {
   try {
+    if(!file) {
+      throw new Error("File required");
+    }
+
+    if(fileFormat === "Video" && fileType.slice(0, 5) !== "video"){
+      throw new Error("Wrong File Type Received");
+    }
+
+    if(fileFormat === "Thumbnail" && fileType.slice(0, 5) !== "image"){
+      throw new Error("Wrong File Type Received");
+    }
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_URL}/api/awsS3?id=${id}`, {
         method: "POST",
@@ -77,17 +76,24 @@ export async function handleUploadFile(file: File | null, fileType: string, file
     })
 
     if(!response2.ok) throw new Error("Error Uploading File");
+    toast({
+      description: "Successfully updated",
+    })
 
-  } catch (error) {
-    // TODO
+  } catch (error: any) {
+    toast({
+      title: "ERROR",
+      description: `${error.message}`,
+      variant: "destructive"
+    })
     console.log(error);
   }
 
 }
 
-export async function titleDesc(text: string | undefined, type: "title" | "description", setLoader:  Dispatch<SetStateAction<boolean>>, id: string){
-  if(!text) text = "";
+export async function titleDesc(text: string | undefined, type: "title" | "description", setLoader:  Dispatch<SetStateAction<boolean>>, id: string, toast?: any){
   try {
+   if(!text) text = "";
     setLoader(true);
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/titleDesc?id=${id}`, {
       method: "POST",
@@ -98,12 +104,48 @@ export async function titleDesc(text: string | undefined, type: "title" | "descr
       cache: "no-store"
     })
     if(!response.ok) throw new Error((await response.json()).error)
+    toast({
+      description: `Successfully updated`,
+    })
 
-  } catch (err) {
-    // TODO
+  } catch (err: any) {
+    toast({
+      title: "ERROR",
+      description: `${err.message}`,
+      variant: "destructive"
+    })
     console.log((err as Error).message);
   }
   finally {
     setLoader(false);
+  }
+}
+
+export async function onDeploy(id?: string, status?: "public" | "private" | "unlisted" | null, toast?: any, setIsDeployLoading?:  Dispatch<SetStateAction<boolean>>, router?: AppRouterInstance){
+    if(!setIsDeployLoading) return;
+  try {
+    setIsDeployLoading(true);
+    if(!status) throw new Error("Set Video Status");
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/deploy?id=${id}`, {
+      method: "POST",
+      body: JSON.stringify({
+        status: status
+      }),
+      cache: "no-store"
+    })
+    if(!response.ok) throw new Error((await response.json()).error)
+    toast({
+      description: `Successfully deployed`,
+    })
+  }catch (e: any) {
+    toast({
+      title: "ERROR",
+      description: `${e.message}`,
+      variant: "destructive"
+    })
+    console.log(e.message)
+  }finally {
+    setIsDeployLoading(false);
+    router?.refresh()
   }
 }

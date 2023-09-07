@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IMAGE_FILE_TYPES, VIDEO_FILE_TYPES } from "@/constatnts";
+import { useToast } from "@/components/ui/use-toast";
 
 const DialogContentProvider = ({
   uploadFile,
@@ -26,7 +27,8 @@ const DialogContentProvider = ({
     fileType: string,
     fileKey: string,
     fileFormat: string,
-    id?: string
+    id?: string,
+    toast?: any
   ) => Promise<void>;
   fileFormat: string;
   id?: string;
@@ -37,7 +39,7 @@ const DialogContentProvider = ({
   const [file, setFile] = useState<File | null>(null);
   const [fileType, setFileType] = useState("");
   const [fileKey, setFileKey] = useState("");
-
+  const {toast} = useToast();
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
@@ -49,10 +51,9 @@ const DialogContentProvider = ({
 
   const handleUploadFile = async () => {
     setLoader(true);
-    await uploadFile(file, fileType, fileKey, fileFormat, id);
+    await uploadFile(file, fileType, fileKey, fileFormat, id, toast);
     setFile(null);
     if(fileFormat === "Video") setLoader(false);
-    // TODO
     router.refresh();
   };
 

@@ -9,6 +9,7 @@ export const oauth2Client = new google.auth.OAuth2(
 const scopes = [
   "https://www.googleapis.com/auth/userinfo.email",
   "https://www.googleapis.com/auth/userinfo.profile",
+  "https://www.googleapis.com/auth/youtube.upload"
 ];
 
 export const authorizationUrl = oauth2Client.generateAuthUrl({

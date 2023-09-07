@@ -3,16 +3,13 @@ import prismadb from "@/lib/prismadb";
 
 const Page = async ({params, searchParams}: {params: null, searchParams: {id: string}}) => {
 
-
-  // const response = await fetch("/api/title-desc", {cache: "no-cache"})
-  // const data = await response.json();
-  // const data:{title?: string, desc?: string} = {}
   const data = await prismadb.workspace.findUnique({
     where: {
       id: searchParams.id
     },
     select: {
       workspaceData: { select: { title: true, description: true } },
+      isDeployed: true
     }
   })
   let imgData
@@ -29,7 +26,7 @@ const Page = async ({params, searchParams}: {params: null, searchParams: {id: st
 
   return (
     <div>
-      <PageProvider id={searchParams.id} imgUrl={imgData?.url} preTitle={title} description={description} />
+      <PageProvider id={searchParams.id} imgUrl={imgData?.url} preTitle={title} description={description} isDeployed={data?.isDeployed} />
     </div>
   )
 }

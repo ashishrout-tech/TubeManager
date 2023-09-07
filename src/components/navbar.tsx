@@ -15,9 +15,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton"
+import NavigationProvider from "@/components/NavigationProvider";
+import {useToast} from "@/components/ui/use-toast";
 
 
 const Navbar = ({
@@ -28,14 +30,22 @@ const Navbar = ({
   const router = useRouter();
   const[userData, setUserData] = useState(userInfo);
   const[loading, setLoading] = useState(false);
+  const {toast} = useToast();
 
+  const pathName = usePathname();
+  const id = useSearchParams().get("id");
   async function Logout() {
     try {
       setLoading(true);
       const response = await fetch("/api/logout", {cache: "no-cache"})
+      if(!response.ok) throw new Error("Something went wrong");
       console.log(await response.text());
-    } catch (error) {
-      // TODO
+    } catch (error: any) {
+      toast({
+        title: "ERROR",
+        description: `${error.message}`,
+        variant: "destructive"
+      })
       console.log(error);
     } finally {
       if(userData !== null) {
@@ -47,14 +57,19 @@ const Navbar = ({
   }
 
   return (
-    <div className=" top-0 fixed w-full">
+    <div className=" top-0 fixed w-full z-10">
       <div className=" px-4 p-2 flex justify-between">
         <div className=" flex gap-x-2 w-fit pt-1.5">
-          <Image className=" h-7" src={"/logo.png"} alt="logo" height={40} width={40}></Image>
+          <Image className=" h-7 w-auto" src={"/logo.png"} alt="logo" height={40} width={40}></Image>
           <h1 className=" text-xl">Youtube</h1>
         </div>
 
         <div className=" flex gap-x-4 sm:gap-x-10">
+          { userData && !loading && pathName !== "/" &&
+          <div className="hidden sm:visible">
+            <NavigationProvider id={id} />
+          </div>
+          }
           <div>
             {userData && !loading && (
               <DropdownMenu>
@@ -68,8 +83,8 @@ const Navbar = ({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Button onClick={Logout}>Logout</Button>
+                  <DropdownMenuItem onClick={Logout} className="hover:cursor-pointer">
+                    Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

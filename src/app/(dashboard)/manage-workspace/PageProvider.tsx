@@ -6,6 +6,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Loader2Icon, Trash2Icon} from "lucide-react";
 import {cn} from "@/lib/utils";
+import {useToast} from "@/components/ui/use-toast";
 
 const PageProvider = ({
     editor,
@@ -16,6 +17,7 @@ const PageProvider = ({
 }) => {
     if(!editor) editor = [];
     const [editorList, setEditorList] = useState(editor)
+    const {toast} = useToast();
 
     const[inputText, setInputText] = useState("");
     const[isLoading, setIsLoading] = useState(false);
@@ -46,8 +48,15 @@ const PageProvider = ({
                 return list;
             })
             setInputText("")
+            toast({
+                description: "Successfully Added"
+            })
         } catch(err: any) {
-            // TODO
+            toast({
+                title: "ERROR",
+                description: "Error adding user",
+                variant: "destructive"
+            })
             console.log(err.message);
         } finally {
             setIsLoading(false);
@@ -77,8 +86,15 @@ const PageProvider = ({
                 })
                 return list;
             });
+            toast({
+                description: "Successfully deleted",
+            })
         } catch (err: any) {
-            // TODO
+            toast({
+                title: "ERROR",
+                description: "Error deleting user",
+                variant: "destructive"
+            })
             console.log(err.message);
         } finally {
             setIsLoading(false);
@@ -90,7 +106,7 @@ const PageProvider = ({
             {!editorList.length &&
                 <p className=" text-muted-foreground text-sm">No editors Added. <br /> <span className=" text-xs">Only you can edit this workspace</span></p>
             }
-            {editorList.length && <ScrollArea className=" max-h-96 outline outline-2 outline-primary/80 py-2 px-1 rounded-md outline-offset-2 text-sm">
+            {!!editorList.length && <ScrollArea className="max-h-52 outline outline-2 outline-primary/80 py-2 px-1 rounded-md outline-offset-2 text-sm !overflow-auto">
                 {editorList.map((editor) => {
                     return (
                         <div key={editor.email} className=" flex justify-between mb-1.5 items-center">

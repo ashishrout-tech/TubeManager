@@ -55,7 +55,7 @@ const ImageProvider = ({
             <DialogTrigger asChild>
               <Button 
                 variant={"outline"}
-                disabled={isImgUpdateLoading? true: false}
+                disabled={isImgUpdateLoading}
                 >
                 { isImgUpdateLoading && <Loader2Icon className=" absolute animate-spin" />}
                 <span className={cn(isImgUpdateLoading ? " text-foreground/30": "" )}>Update</span>
