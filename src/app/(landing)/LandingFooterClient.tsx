@@ -8,6 +8,7 @@ import JoinDialogContentProvider from "@/components/landing/JoinDialogContentPro
 import {useState} from "react";
 import {Loader2Icon} from "lucide-react";
 import {cn} from "@/lib/utils";
+import {Separator} from "@/components/ui/separator";
 
 const LandingFooterClient = ({
     userInfo
@@ -17,10 +18,15 @@ const LandingFooterClient = ({
     const[isCreateLoading, setIsCreateLoading] = useState(false);
 
     return(
-        <div className=" flex justify-between">
+        <>
+            <span className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-500 to-slate-800 text-transparent bg-clip-text dark:bg-gradient-to-r dark:from-slate-300 dark:to-slate-500">Workspace</span>
+
+        <div className="flex justify-between w-10/12 md:w-5/12 mt-7">
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button>
+                    <Button variant={"outline"}
+                            className="hover:bg-background transition-all border-b-4 hover:border-b-8 hover:-translate-y-0.5 active:translate-y-0 active:border-b-2 w-28 text-sm md:w-40 md:text-xl rounded-full"
+                    >
                         Join
                     </Button>
                 </DialogTrigger>
@@ -29,7 +35,7 @@ const LandingFooterClient = ({
 
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button>
+                    <Button variant={"outline"} className="hover:bg-background transition-all border-b-4 hover:border-b-8 hover:-translate-y-0.5 active:translate-y-0 active:border-b-2 w-28 text-sm md:w-40 md:text-xl rounded-full">
                         { isCreateLoading && <Loader2Icon className=" absolute animate-spin" />}
                         <span className={cn(isCreateLoading ? " text-foreground/30": "" )}>Create</span>
                     </Button>
@@ -37,6 +43,7 @@ const LandingFooterClient = ({
                 <CreateDialogContentProvider setLoader={setIsCreateLoading} userInfo={userInfo} />
             </Dialog>
         </div>
+        </>
     )
 }
 

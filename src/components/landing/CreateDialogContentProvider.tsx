@@ -59,14 +59,14 @@ const CreateDialogContentProvider = ({
                 <DialogTitle>Create Workspace</DialogTitle>
                 <DialogDescription>create workspace here and add editors in manage workspace section.</DialogDescription>
             </DialogHeader>
-            <Separator className=" my-2" />
+            <Separator />
             <div className=" flex flex-col">
                 <Input type="text"
                        placeholder="Type your workspace name here"
                        onChange={(e) => setWorkspaceName(e.target.value)}
                 />
                 <DialogClose asChild>
-                    <Button className=" w-fit h-7 mt-4"
+                    <Button className="w-28 h-9 rounded-full mt-4"
                             type="submit"
                             onClick={Submit}
                     >

@@ -17,7 +17,7 @@ const NavigationProvider = ({id}: {id: string | null}) => {
 
     return (
         <NavigationMenu>
-            <NavigationMenuList className="md:mr-10">
+            <NavigationMenuList>
 
                 <NavigationMenuItem>
                     <Link href={"/"} legacyBehavior passHref>

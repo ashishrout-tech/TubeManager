@@ -52,13 +52,14 @@ const Navbar = ({
         setUserData(null)
       }
       setLoading(false);
-      router.push("/");
+      if(pathName !== "/") router.push("/");
+      else router.refresh();
     }
   }
 
   return (
-    <div className=" top-0 fixed w-full z-10">
-      <div className=" px-4 p-2 flex justify-between">
+    <div className="top-0 fixed w-full z-[100] backdrop-blur-2xl">
+      <div className="px-4 pt-4 md:px-20 p-2 flex justify-between">
         <div className=" flex gap-x-2 w-fit pt-1.5">
           <Image className=" h-7 w-auto" src={"/logo.png"} alt="logo" height={40} width={40}></Image>
           <h1 className=" text-xl">Youtube</h1>
@@ -66,7 +67,7 @@ const Navbar = ({
 
         <div className=" flex gap-x-4 sm:gap-x-10">
           { userData && !loading && pathName !== "/" &&
-          <div className="hidden sm:visible">
+          <div className="hidden sm:inline-block">
             <NavigationProvider id={id} />
           </div>
           }
@@ -95,8 +96,8 @@ const Navbar = ({
             {!userData && (
               <Link
                 className={cn(
-                  buttonVariants({ variant: "default" }),
-                  " mt-1.5 h-7 w-20 sm:w-24 sm:h-8 sm:mt-1"
+                  buttonVariants({ variant: "premium" }),
+                  " mt-1.5 h-7 w-20 sm:w-24 sm:h-8 sm:mt-1 hover:-translate-y-0.5 transition"
                 )}
                 href={"/authorization"}
               >

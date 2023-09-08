@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 257 100% 97%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -24,11 +24,13 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 346.8 77.2% 49.8%;
-    --radius: 0.3rem;
+    --radius: 1.1rem;
+
+    --footer-colour: 216 100% 60%;
   }
  
   .dark {
-    --background: 20 14.3% 4.1%;
+    --background: 210 56% 18%;
     --foreground: 0 0% 95%;
     --card: 24 9.8% 10%;
     --card-foreground: 0 0% 95%;
@@ -47,5 +49,17 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 346.8 77.2% 49.8%;
+
+    --footer-colour: 216 100% 60%;
+  }
+
+  .font-outline-2 {
+    -webkit-text-stroke: 2px black;
+  }
+  .font-outline-4 {
+    -webkit-text-stroke: 4px black;
+  }
+  .custom-background-size {
+    background-size: 1000px 100px;
   }
 }
