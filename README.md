@@ -1,34 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Tube Manager
 
-## Getting Started
+### Platform to Manage, Update and Deploy your YouTube videos
 
-First, run the development server:
+Click to watch the video.
+[![Watch the video](https://img.youtube.com/vi/KuZPdGzfoe8/maxresdefault.jpg)](https://youtu.be/KuZPdGzfoe8)
 
+## How It Works:
+- **Create Projects**: Start by creating dedicated Workspaces for your YouTube videos. Each workspace serves as a container for all related content.
+
+- **Add Videos**: Easily add videos to your workspaces and update their details, such as titles, thumbnails, and descriptions.
+
+- **Collaborate**: Invite collaborators and assign roles to team members. You have full control over who can edit and manage your videos.
+
+- **Deployment**: When your videos are ready for the world to see, deploy them to your YouTube channel directly from the app.
+
+## Getting Started With Development:
+
+### 1. Clone the Repository:
+   - Begin by cloning your project repository from GitHub. `https://github.com/ashishrout-tech/TubeManager.git`
+### 2. Install Dependencies:
+```bash
+npm run install
+#or
+yarn install
+```
+### 3. Configuration:
+   - Copy the .env.example file to create a new .env file. `cp .env.example .env`
+   - Open the .env file and fill in all the required variables with the appropriate values.
+### 4. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
 ```
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Tech Stack
+This project is built using the following technologies and tools:
+- Next.js
+- Tailwind CSS
+- Prisma
+- AWS S3
