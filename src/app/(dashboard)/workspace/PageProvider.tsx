@@ -28,13 +28,15 @@ const PageProvider = ({
   description,
   imgUrl,
   id,
-  isDeployed
+  isDeployed,
+  adminEmail
 }: {
   preTitle?: string;
   description?: string;
   imgUrl?: string;
   id?: string;
   isDeployed?: boolean;
+  adminEmail?: string;
 }) => {
   const {toast} = useToast();
 
@@ -106,7 +108,7 @@ const PageProvider = ({
             </div>
             {!isDeployed && <Button className=" mt-4 text-sm md:text-base"
                     variant={"destructive"}
-                    onClick={() => onDeploy(id, status, toast, setIsDeployLoading, router)}
+                    onClick={() => onDeploy(id, status, toast, setIsDeployLoading, adminEmail, router)}
                     disabled={isDeployLoading}
             >
               { isDeployLoading && <Loader2Icon className=" absolute animate-spin" />}

@@ -5,8 +5,10 @@ import {useEffect, useState} from "react";
 import {oauth2_v2} from "googleapis";
 import {Separator} from "@/components/ui/separator";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {CheckCircle2Icon, CheckCircleIcon, Clock2Icon, ExternalLinkIcon} from "lucide-react";
+import { CheckCircleIcon, Clock2Icon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import {cn} from "@/lib/utils";
+import {buttonVariants} from "@/components/ui/button";
 
 const JoinDialogContentProvider = ({
     userInfo
@@ -54,6 +56,15 @@ const JoinDialogContentProvider = ({
         return (
             <DialogContent>
                 To access workspaces, please login
+                <div className="flex flex-col">
+                    If you&rsquo;re not logged in, try out this dummy workspace:
+                    <Link target={"_blank"}
+                          href={`${process.env.NEXT_PUBLIC_URL}/workspace?id=49387914-b8ea-4b1e-b00d-869a8e0a57e0`}
+                          className={cn(buttonVariants({variant: "link"}))}
+                    >
+                        Link <ExternalLinkIcon />
+                    </Link>
+                </div>
             </DialogContent>
         )
     }

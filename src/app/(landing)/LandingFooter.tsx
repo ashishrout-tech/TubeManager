@@ -1,6 +1,7 @@
 "use client"
 import {Separator} from "@/components/ui/separator";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {QuoteIcon, TextQuoteIcon} from "lucide-react";
 
 const testimonials:any[] = []
 for(let i = 0; i < 5; i++) {
@@ -21,14 +22,17 @@ const LandingFooter = () => {
             <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 mx-12 md:mx-20 pb-4">
                 {
                     testimonials.map((item) =>(
-                        <div key={item.id} className="hover:-translate-y-1 transition h-[20.7rem] w-[20.7rem] flex justify-center items-center rounded-3xl bg-gradient-to-r from-fuchsia-500 to-cyan-500">
+                        <div key={item.id} className="hover:-translate-y-1 hover:drop-shadow-xl transition-all h-[20.7rem] w-[20.7rem] flex justify-center items-center rounded-3xl bg-gradient-to-r from-fuchsia-500 to-cyan-500">
                             <Card className="h-80 w-[20rem] bg-background ">
                                 <CardHeader>
                                     <CardTitle>{item.name}</CardTitle>
                                     <CardDescription>{item.title}</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="break-words mt-8">{item.description}</p>
+                                    <p className="break-words mt-8 flex gap-x-1">
+                                        <QuoteIcon className="rotate-180 h-8 w-8" />
+                                        <span className="mt-2">{item.description}</span>
+                                    </p>
                                 </CardContent>
                             </Card>
                         </div>

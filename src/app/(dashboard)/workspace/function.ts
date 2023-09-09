@@ -121,10 +121,20 @@ export async function titleDesc(text: string | undefined, type: "title" | "descr
   }
 }
 
-export async function onDeploy(id?: string, status?: "public" | "private" | "unlisted" | null, toast?: any, setIsDeployLoading?:  Dispatch<SetStateAction<boolean>>, router?: AppRouterInstance){
+export async function  onDeploy(id?: string, status?: "public" | "private" | "unlisted" | null, toast?: any, setIsDeployLoading?:  Dispatch<SetStateAction<boolean>>, adminEmail?:string, router?: AppRouterInstance){
     if(!setIsDeployLoading) return;
+    if(!adminEmail) return;
   try {
     setIsDeployLoading(true);
+
+    const userResponse = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user`,{
+      cache: "no-store"
+    })
+    const userData = await userResponse.json();
+    if(!userResponse.ok) throw new Error(userData.error);
+
+    if(adminEmail !== userData.userData.email) throw new Error("You don't have rights to deploy this workspace")
+
     if(!status) throw new Error("Set Video Status");
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/deploy?id=${id}`, {
       method: "POST",

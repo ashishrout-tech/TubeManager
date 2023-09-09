@@ -9,7 +9,8 @@ const Page = async ({params, searchParams}: {params: null, searchParams: {id: st
     },
     select: {
       workspaceData: { select: { title: true, description: true } },
-      isDeployed: true
+      isDeployed: true,
+      adminEmail: true
     }
   })
   let imgData
@@ -26,7 +27,7 @@ const Page = async ({params, searchParams}: {params: null, searchParams: {id: st
 
   return (
     <div>
-      <PageProvider id={searchParams.id} imgUrl={imgData?.url} preTitle={title} description={description} isDeployed={data?.isDeployed} />
+      <PageProvider adminEmail={data?.adminEmail} id={searchParams.id} imgUrl={imgData?.url} preTitle={title} description={description} isDeployed={data?.isDeployed} />
     </div>
   )
 }

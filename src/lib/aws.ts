@@ -12,7 +12,7 @@ const s3Client = new S3Client({
 export async function getObjectURL(key: string) {
     try {
         const command = new GetObjectCommand({
-            Bucket: "ashishrout.tech.youtube",
+            Bucket: `${process.env.BUCKET_NAME}`,
             Key: key,
         })
     

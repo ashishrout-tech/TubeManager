@@ -62,7 +62,7 @@ const Navbar = ({
       <div className="px-4 pt-4 md:px-20 p-2 flex justify-between">
         <div className=" flex gap-x-2 w-fit pt-1.5">
           <Image className=" h-7 w-auto" src={"/logo.png"} alt="logo" height={40} width={40}></Image>
-          <h1 className=" text-xl">Youtube</h1>
+          <h1 className=" text-xl">Tube Manager</h1>
         </div>
 
         <div className=" flex gap-x-4 sm:gap-x-10">
@@ -82,7 +82,7 @@ const Navbar = ({
                     )} ${userData?.family_name?.charAt(0)}`}</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="z-[100]">
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem onClick={Logout} className="hover:cursor-pointer">
                     Logout
